@@ -199,12 +199,10 @@ class AdminDriverController extends GetxController {
       if (showLoader) isLoading.value = false;
     }
   }
-
   Future<bool> fetchDriverDetails(int registrationId) async {
     isDetailsLoading.value = true;
     detailsError.value = '';
     driverDetails.value = null;
-
     try {
       driverDetails.value = await _service.fetchDriverDetails(registrationId);
       return true;
@@ -302,5 +300,4 @@ class AdminDriverController extends GetxController {
 
   String _cleanError(Object error) =>
       error.toString().replaceFirst('Exception: ', '');
-
 }

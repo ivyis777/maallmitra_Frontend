@@ -5,9 +5,7 @@ class LocalStorageConstants {
 // AUTH TOKEN STORAGE
 // ============================================================
 static const String _accessTokenKey ='access_token';
-
 static const String _refreshTokenKey ='refresh_token';
-
 static const String _mobileNumberKey ='mobile_number';
 
 // ============================================================

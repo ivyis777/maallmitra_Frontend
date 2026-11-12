@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'presentation/screens/admin/admin_driver_screen.dart';
 import 'core/storage/colors.dart';
 import 'presentation/screens/LoginPage/loginPage.dart';
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -24,7 +22,8 @@ class MaalMitraApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Arial',
       ),
-      home: const SplashScreen(),
+       home: const SplashScreen(),
+      
     );
   }
 }
@@ -48,11 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-
-    // ============================================================
     // MAIN ANIMATION
-    // ============================================================
-
     _mainController = AnimationController(
       vsync: this,
       duration: const Duration(
@@ -60,9 +55,8 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    // ============================================================
     // TRUCK ANIMATION
-    // ============================================================
+
 
     _truckAnimation = Tween<double>(
       begin: -500,
@@ -77,11 +71,7 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
-
-    // ============================================================
     // LOGO ANIMATION
-    // ============================================================
-
     _logoAnimation = Tween<double>(
       begin: 0,
       end: 1,
@@ -95,11 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
-
-    // ============================================================
     // TAGLINE ANIMATION
-    // ============================================================
-
     _taglineAnimation = Tween<double>(
       begin: 0,
       end: 1,
@@ -113,11 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
-
-    // ============================================================
     // ROAD ANIMATION
-    // ============================================================
-
     _roadAnimation = Tween<double>(
       begin: 0,
       end: 1,
@@ -131,11 +113,7 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
-
-    // ============================================================
     // BACKGROUND PULSE
-    // ============================================================
-
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(
@@ -145,30 +123,23 @@ class _SplashScreenState extends State<SplashScreen>
         reverse: true,
       );
 
-    // ============================================================
-    // START MAIN ANIMATION
-    // ============================================================
-
-    _mainController.forward().whenComplete(() {
+    // START THE MAIN ANIMATION AFTER THE FIRST FLUTTER FRAME
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
 
-      // ============================================================
-      // GO TO LOGIN AFTER SPLASH COMPLETES
-      // ============================================================
+      _mainController.forward().whenComplete(() {
+        if (!mounted) return;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-           builder: (context) => const LoginPage(),
-         // builder: (context) => const AdminDriverScreen(),
-          
-         ),     
-
-
-      );
+        // GO TO LOGIN AFTER THE SPLASH ANIMATION COMPLETES
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+        );
+      });
     });
   }
-
   @override
   void dispose() {
     _mainController.dispose();
@@ -190,11 +161,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: SafeArea(
         child: Stack(
           children: [
-
-            // ========================================================
             // ORANGE BACKGROUND
-            // ========================================================
-
             Positioned.fill(
               child: Container(
                 decoration: const BoxDecoration(
@@ -210,11 +177,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
             ),
-
-            // ========================================================
             // BACKGROUND GLOW
-            // ========================================================
-
             Center(
               child: AnimatedBuilder(
                 animation: _pulseController,
@@ -254,20 +217,12 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
 
-            // ========================================================
-            // MAIN CONTENT
-            // ========================================================
-
             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
 
                 children: [
-
-                  // ====================================================
                   // TRUCK
-                  // ====================================================
-
                   AnimatedBuilder(
                     animation: _truckAnimation,
 
@@ -295,11 +250,7 @@ class _SplashScreenState extends State<SplashScreen>
                   const SizedBox(
                     height: 8,
                   ),
-
-                  // ====================================================
                   // ROAD
-                  // ====================================================
-
                   AnimatedBuilder(
                     animation: _roadAnimation,
 
@@ -328,11 +279,7 @@ class _SplashScreenState extends State<SplashScreen>
                   const SizedBox(
                     height: 20,
                   ),
-
-                  // ====================================================
                   // MAALMITRA LOGO
-                  // ====================================================
-
                   FadeTransition(
                     opacity: _logoAnimation,
 
@@ -367,11 +314,7 @@ class _SplashScreenState extends State<SplashScreen>
                   const SizedBox(
                     height: 8,
                   ),
-
-                  // ====================================================
                   // TAGLINE
-                  // ====================================================
-
                   FadeTransition(
                     opacity: _taglineAnimation,
 
@@ -389,11 +332,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ],
               ),
             ),
-
-            // ========================================================
             // BOTTOM LOADING
-            // ========================================================
-
             Positioned(
               bottom: 70,
               left: 0,
@@ -416,11 +355,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
             ),
-
-            // ========================================================
             // BRAND
-            // ========================================================
-
             const Positioned(
               bottom: 35,
               left: 0,

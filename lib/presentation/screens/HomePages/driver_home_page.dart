@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../../../core/storage/colors.dart';
-
 class DriverHomePage extends StatefulWidget {
   const DriverHomePage({super.key});
 
@@ -757,130 +755,69 @@ class _DriverHomePageState extends State<DriverHomePage> {
   // FUEL + DELIVERY CARD
   // ==========================================================
 
-  Widget _buildTripInfoCard() {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 18,
-      ),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFFFFF5E8),
-            Color(0xFFFFF0DF),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-
-          Expanded(
-            child: Row(
-              children: [
-
-                Container(
-                  width: 46,
-                  height: 46,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFFE4C7),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.local_gas_station_rounded,
-                    color: colours.primaryColor,
-                    size: 25,
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Fuel left",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: textGrey,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "120 km",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w800,
-                        color: textDark,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            height: 50,
-            width: 1,
-            color: Colors.black.withOpacity(0.08),
-          ),
-
-          const SizedBox(width: 15),
-
-          Expanded(
-            child: Row(
-              children: [
-
-                Container(
-                  width: 46,
-                  height: 46,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFFE4C7),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.access_time_rounded,
-                    color: colours.primaryColor,
-                    size: 25,
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Est. delivery",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: textGrey,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        "Today, 8:30 PM",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                          color: textDark,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+Widget _buildTripInfoCard() {
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 18,
+    ),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [
+          Color(0xFFFFF5E8),
+          Color(0xFFFFF0DF),
         ],
       ),
-    );
-  }
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Row(
+      children: [
+        Container(
+          width: 46,
+          height: 46,
+          decoration: const BoxDecoration(
+            color: Color(0xFFFFE4C7),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.access_time_rounded,
+            color: colours.primaryColor,
+            size: 25,
+          ),
+        ),
 
+        const SizedBox(width: 14),
+
+        const Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Est. delivery",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: textGrey,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                "Today, 8:30 PM",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w800,
+                  color: textDark,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
   // ==========================================================
   // BOTTOM NAVIGATION
   // ==========================================================

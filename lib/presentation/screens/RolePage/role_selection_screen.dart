@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../registration/manufacturer_registration_screen.dart';
 import '../registration/truck_owner_registration_screen.dart';
 import '../registration/driver_registration_screen.dart';
-import '../registration/transport_vendor_registration_screen.dart';
+import '../registration/vendor_registration_screen.dart';
 import '../../../core/storage/colors.dart';
 
 class RoleSelectionScreen extends StatelessWidget {
@@ -306,17 +306,10 @@ class RoleSelectionScreen extends StatelessWidget {
 
                         _RoleCard(
                           imagePath: 'assets/images/truck1.png',
-
                           title: 'Truck Owner',
-
                           subtitle: 'Gaadi aur load',
-
-                          description:
-                              'Apni gaadi register karein aur load paayein.',
-
-                          backgroundColor:
-                              colours.rolecardbgcolor.withOpacity(0.88) ,
-
+                          description: 'Apni gaadi register karein aur load paayein.',
+                          backgroundColor: colours.rolecardbgcolor.withOpacity(0.88) ,
                           borderColor:colours.primaryColor,
 
                           onTap: () {
@@ -336,17 +329,10 @@ class RoleSelectionScreen extends StatelessWidget {
 
                         _RoleCard(
                           imagePath: 'assets/images/driver.png',
-
                           title: 'Driver',
-
                           subtitle: 'Trip aur earning',
-
-                          description:
-                              'Trip lein, kamai badhayein aur apni pehchaan banayein.',
-
-                          backgroundColor:
-                              colours.rolecardbgcolor.withOpacity(0.88) ,
-
+                          description: 'Trip lein, kamai badhayein aur apni pehchaan banayein.',
+                          backgroundColor: colours.rolecardbgcolor.withOpacity(0.88) ,
                           borderColor:colours.primaryColor,
 
                           onTap: () {
@@ -385,7 +371,7 @@ class RoleSelectionScreen extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (_) =>
-                                    const TransportVendorRegistrationScreen(),
+                                    const VendorRegistrationScreen(),
                               ),
                             );
                           },
@@ -561,14 +547,9 @@ class _RoleCard extends StatelessWidget {
 
                       const SizedBox(height: 5),
 
-                      Text(
-                        description,
-
+                      Text(description,
                         maxLines: 2,
-
-                        overflow:
-                            TextOverflow.ellipsis,
-
+                        overflow: TextOverflow.ellipsis,
                         style:  TextStyle(
                           color:  RoleSelectionScreen.textcolor,
                           fontSize: 12,

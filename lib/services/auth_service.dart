@@ -1,137 +1,181 @@
+
+
+
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import '../core/constants/app url.dart';
-class AuthService {
-  static const String _sendOtpUrl = '${AppUrl.baseUrl}send-otp/';  
-  static const String _resendOtpUrl = '${AppUrl.baseUrl}resend-otp/'; 
-  static const String _loginUrl = '${AppUrl.baseUrl}login/';
 
-  // ==========================================================
+import '../core/constants/app url.dart';
+
+class AuthService {
+  static const Duration _timeout = Duration(seconds: 15);
+
+  // ============================================================
   // SEND OTP
-  // ==========================================================
+  // ============================================================
 
   Future<Map<String, dynamic>> sendOtp(
     String mobileNumber,
-  ) async {
+  ) {
     return _postRequest(
-      _sendOtpUrl,
+      AppUrl.sendOtp,
       {
-        'mobile_number': mobileNumber,
+        'mobile_number': mobileNumber.trim(),
         'channel': 'sms',
       },
     );
   }
 
-  // ==========================================================
-  // VERIFY OTP / LOGIN
-  // ==========================================================
+  // ============================================================
+  // VERIFY OTP
+  // ============================================================
 
   Future<Map<String, dynamic>> verifyOtp(
     String mobileNumber,
     String otp,
     int verificationId,
-  ) async {
+  ) {
     return _postRequest(
-      _loginUrl,
+      AppUrl.verifyOtp,
       {
-        'mobile_number': mobileNumber,
-        'otp': otp,
+        'mobile_number': mobileNumber.trim(),
+        'otp': otp.trim(),
         'verification_id': verificationId.toString(),
         'channel': 'sms',
       },
     );
   }
+
   // ============================================================
-// RESEND OTP
-// ============================================================
+  // RESEND OTP
+  // ============================================================
 
-Future<Map<String, dynamic>> resendOtp(
-  String mobileNumber,
-  int verificationId,
-) async {
-  return _postRequest(
-    _resendOtpUrl
-    ,
-    {
-      'mobile_number': mobileNumber,
-      'verification_id': verificationId,
-      'channel': 'sms',
-    },
-  );
-}
+  Future<Map<String, dynamic>> resendOtp(
+    String mobileNumber,
+    int verificationId,
+  ) {
+    return _postRequest(
+      AppUrl.resendOtp,
+      {
+        'mobile_number': mobileNumber.trim(),
+        'verification_id': verificationId,
+        'channel': 'sms',
+      },
+    );
+  }
 
-  // ==========================================================
+  // ============================================================
+  // MANUFACTURER PROFILE
+  // ============================================================
+
+  Future<Map<String, dynamic>> getManufacturerProfile(
+    String accessToken,
+  ) async {
+    final uri = Uri.parse(AppUrl.manufacturerProfile);
+
+    try {
+      debugPrint('========== MANUFACTURER PROFILE ==========');
+      debugPrint('API URL: $uri');
+
+      final response = await http
+          .get(
+            uri,
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $accessToken',
+            },
+          )
+          .timeout(_timeout);
+
+      return _decodeResponse(response);
+    } on TimeoutException {
+      debugPrint('Manufacturer profile request timed out.');
+      throw Exception('Server connection timed out.');
+    } catch (e, stackTrace) {
+      debugPrint('Manufacturer profile request error: $e');
+      debugPrintStack(stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  // ============================================================
   // COMMON POST REQUEST
-  // ==========================================================
+  // ============================================================
 
   Future<Map<String, dynamic>> _postRequest(
     String url,
     Map<String, dynamic> body,
   ) async {
+    final uri = Uri.parse(url);
+
     try {
-      debugPrint('API URL: $url');
-      debugPrint('API Request: $body');
+      debugPrint('========== AUTH API REQUEST ==========');
+      debugPrint('API URL: $uri');
+
+      // Do not print OTPs or authentication secrets.
+      debugPrint('Request fields: ${body.keys.toList()}');
 
       final response = await http
           .post(
-            Uri.parse(url),
-            headers: {
+            uri,
+            headers: const {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
             },
             body: jsonEncode(body),
           )
-          .timeout(
-            const Duration(seconds: 15),
-          );
+          .timeout(_timeout);
 
-      debugPrint(
-        'API Status: ${response.statusCode}',
-      );
+      debugPrint('HTTP Status: ${response.statusCode}');
+      debugPrint('API Response: ${response.body}');
 
-      debugPrint(
-        'API Response: ${response.body}',
-      );
-
-      Map<String, dynamic> data = {};
-
-      if (response.body.isNotEmpty) {
-        final decoded = jsonDecode(response.body);
-
-        if (decoded is Map<String, dynamic>) {
-          data = decoded;
-        }
-      }
-
-      // Your API returns 200 even for many false responses,
-      // so return the response body to the controller.
-      if (response.statusCode >= 200 &&
-          response.statusCode < 300) {
-        return data;
-      }
-      String message = 'Request failed';
-      if (data['errors'] != null) {
-        message = data['errors'].toString();
-      } else if (data['message'] != null) {
-        message = data['message'].toString();
-      } else if (data['detail'] != null) {
-        message = data['detail'].toString();
-      }
-
-      throw Exception(message);
+      return _decodeResponse(response);
     } on TimeoutException {
+      debugPrint('Auth request timed out: $uri');
       throw Exception(
-        'Server connection timed out',
+        'Server connection timed out. Please try again.',
       );
-    } catch (e) {
-      if (e is Exception) {
-        rethrow;
-      }
+    } on FormatException catch (e) {
+      debugPrint('Invalid JSON response: $e');
+      rethrow;
+    } catch (e, stackTrace) {
+      debugPrint('Auth API request failed: $e');
+      debugPrintStack(stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  // ============================================================
+  // COMMON RESPONSE DECODER
+  // ============================================================
+
+  Map<String, dynamic> _decodeResponse(
+    http.Response response,
+  ) {
+    dynamic decoded;
+
+    try {
+      decoded = jsonDecode(response.body);
+    } on FormatException {
       throw Exception(
-        'Unable to connect to server',
+        'Server returned an invalid JSON response '
+        '(HTTP ${response.statusCode}).',
       );
     }
+
+    if (decoded is Map<String, dynamic>) {
+      return decoded;
+    }
+
+    if (decoded is Map) {
+      return Map<String, dynamic>.from(decoded);
+    }
+
+    throw Exception(
+      'Unexpected server response format '
+      '(HTTP ${response.statusCode}).',
+    );
   }
 }

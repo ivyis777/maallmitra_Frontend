@@ -1,4 +1,3 @@
-
 class AdminDriverModel {
   final bool success;
   final String message;
@@ -6,7 +5,6 @@ class AdminDriverModel {
   final List<AdminDriver> pending;
   final List<AdminDriver> approved;
   final List<AdminDriver> rejected;
-
   AdminDriverModel({
     required this.success,
     required this.message,
@@ -15,20 +13,25 @@ class AdminDriverModel {
     required this.approved,
     required this.rejected,
   });
-
   factory AdminDriverModel.fromJson(Map<String, dynamic> json) {
+    // Read the nested drivers object from the API response.
+    final drivers = _asMap(json['drivers']);
+
     return AdminDriverModel(
       success: json['success'] == true,
       message: json['message']?.toString() ?? '',
+
+      // Summary is inside drivers.summary
       summary: DriverSummary.fromJson(
-        _asMap(json['summary']),
+        _asMap(drivers['summary']),
       ),
-      pending: _parseDrivers(json['pending']),
-      approved: _parseDrivers(json['approved']),
-      rejected: _parseDrivers(json['rejected']),
+
+      // Registration lists are inside drivers
+      pending: _parseDrivers(drivers['pending']),
+      approved: _parseDrivers(drivers['approved']),
+      rejected: _parseDrivers(drivers['rejected']),
     );
   }
-
   static Map<String, dynamic> _asMap(dynamic value) {
     if (value is Map) {
       return Map<String, dynamic>.from(value);

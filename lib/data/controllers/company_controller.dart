@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
-
 import '../../services/company_service.dart';
 import '../models/company_model.dart';
-
 class CompanyController extends GetxController {
   final CompanyService _service = CompanyService();
   // Loading states
@@ -101,9 +99,7 @@ class CompanyController extends GetxController {
         documentType: documentType,
         documentPath: documentPath,
       );
-
       company.value = result;
-
       return true;
     } catch (e) {
       errorMessage.value = e.toString().replaceFirst(

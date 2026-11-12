@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../core/storage/colors.dart';
 
 class OwnerHomePage extends StatefulWidget {

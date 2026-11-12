@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../core/storage/colors.dart';
 
-class BusinessHomePage extends StatefulWidget {
-  const BusinessHomePage({super.key});
+class ManufacturerHomePage extends StatefulWidget {
+  const ManufacturerHomePage({super.key});
 
   @override
-  State<BusinessHomePage> createState() => _BusinessHomePageState();
+  State<ManufacturerHomePage> createState() => _ManufacturerHomePage();
 }
 
-class _BusinessHomePageState extends State<BusinessHomePage> {
+class _ManufacturerHomePage extends State<ManufacturerHomePage> {
   int selectedIndex = 0;
 
   // ==========================================================
